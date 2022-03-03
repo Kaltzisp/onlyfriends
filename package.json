@@ -1,0 +1,20 @@
+{
+    "name": "jmov",
+    "version": "1.0",
+    "license": "ISC",
+    "description": "Real time video viewer built in JS.",
+    "main": "index.js",
+    "author": "Linke",
+    "engines": {
+        "node": "17.5.x"
+    },
+    "devDependencies": {
+        "eslint": "latest",
+        "eslint-config-airbnb-base": "latest"
+    },
+    "dependencies": {
+        "express": "latest",
+        "socket.io": "latest",
+        "webtorrent": "latest"
+    }
+}

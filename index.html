@@ -1,0 +1,25 @@
+<html lang="en">
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">>
+    <head>
+        <title>OnlyBabu - Watch Together ♥</title>
+        <link rel="icon" type="image/x-icon" href="/scripts/favicon.png">
+        <link rel="stylesheet" href="scripts/styles.css">
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="scripts/jquery.js"></script>
+        <script src="scripts/script.js"></script>
+    </head>
+    <body>
+        <input id="magnetLink" class="text" placeholder=" Magnet Link"></input>
+        <div id="buttons">
+            <button id="torrent" class="button"> Torrent </button>
+            <button id="play" class="button"> Play </button>
+            <button id="pause" class="button"> Pause </button>
+            <button id="sync" class="button"> Synchronize </button>
+        </div>
+        <video id="player" controls>
+            <source>
+        </video>
+        <br>
+        <select id="videoSelector" title="Select media"></select>
+    </body>
+</html>
