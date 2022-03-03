@@ -1,6 +1,7 @@
 /* global $ io */
 const socket = io();
 let player = {};
+let video = {};
 
 // Socket events.
 socket.on("videoList", (videos) => {
@@ -17,12 +18,61 @@ socket.on("getVideo", (path) => {
     // parseSubs(subs).map((cue) => track.addCue(cue));
 });
 
+socket.on("torrentInfo", (torrentInfo) => {
+    $("#torrent").text(`${torrentInfo.progress} %`);
+    $("#magnetLink")[0].value = `${torrentInfo.name} : ${torrentInfo.downloaded} Mb / ${torrentInfo.size} Mb : ETA ${torrentInfo.timeLeft} seconds.`;
+    $("#torrent").prop("disabled", true);
+    $("#torrent").css("background-color", "grey");
+});
+
+socket.on("torrentDone", (message) => {
+    $("#torrent").text("Torrent");
+    $("#magnetLink")[0].value = message || "";
+    $("#torrent").prop("disabled", false);
+    $("#torrent").css("background-color", "darkslategray");
+});
+
+// Socket events.
+socket.on("play", () => {
+    if (video.paused) video.play();
+});
+
+socket.on("pause", () => {
+    if (video.paused === false) video.pause();
+});
+
+socket.on("sync", (time) => {
+    if (video.paused === false) video.pause();
+    video.currentTime = time;
+});
+
 // DOM Load Jquery.
 $(() => {
     player = $("#player");
+    video = player[0];
+
     $("#videoSelector").change(() => {
         socket.emit("selectVideo", $("#videoSelector")[0].value);
     });
+
+    $("#torrent").click(() => {
+        $("#torrent").prop("disabled", true);
+        $("#torrent").css("background-color", "grey");
+        socket.emit("torrent", $("#magnetLink")[0].value);
+    });
+
+    $("#play").click(() => {
+        socket.emit("playAll");
+    });
+
+    $("#pause").click(() => {
+        socket.emit("pauseAll");
+    });
+
+    $("#sync").click(() => {
+        socket.emit("syncAll", video.currentTime);
+    });
+
 });
 
 /*
@@ -66,34 +116,6 @@ function parseSubs(srt) {
     return cues;
 }
 
-// Socket events.
-socket.on("play", () => {
-    if (video.paused) video.play();
-});
-
-socket.on("pause", () => {
-    if (video.paused === false) video.pause();
-});
-
-socket.on("sync", (time) => {
-    if (video.paused === false) video.pause();
-    video.currentTime = time;
-});
-
-socket.on("torrentInfo", (torrentInfo) => {
-    $("#torrent").text(`${torrentInfo.progress} %`);
-    $("#magnetLink")[0].value = `${torrentInfo.name} : ${torrentInfo.downloaded} Mb / ${torrentInfo.size} Mb : ETA ${torrentInfo.timeLeft} seconds.`;
-    $("#torrent").prop("disabled", true);
-    $("#torrent").css("background-color", "grey");
-});
-
-socket.on("torrentDone", (message) => {
-    $("#torrent").text("Torrent");
-    $("#magnetLink")[0].value = message || "";
-    $("#torrent").prop("disabled", false);
-    $("#torrent").css("background-color", "darkslategray");
-});
-
 socket.on("readyVideo", (data) => {
     const path = data[0];
     const subs = data[1];
@@ -104,37 +126,7 @@ socket.on("readyVideo", (data) => {
     parseSubs(subs).map((cue) => track.addCue(cue));
 });
 
-socket.on("errorMessage", (message) => {
-    // eslint-disable-next-line no-alert
-    alert(message);
-});
-
 // DOM load jQuery.
 $(() => {
-    player = $("#player");
-    video = player[0];
-    socket.emit("selectVideo", "0");
-
-    $("#torrent").click(() => {
-        $("#torrent").prop("disabled", true);
-        $("#torrent").css("background-color", "grey");
-        socket.emit("torrent", [$("#magnetLink")[0].value, $("#videoSelector")[0].options.selectedIndex]);
-    });
-
-    $("#play").click(() => {
-        socket.emit("playAll");
-    });
-
-    $("#pause").click(() => {
-        socket.emit("pauseAll");
-    });
-
-    $("#sync").click(() => {
-        socket.emit("syncAll", video.currentTime);
-    });
-
-    $("#videoSelector").change(() => {
-        socket.emit("selectVideo", $("#videoSelector")[0].options.selectedIndex);
-    });
 });
 */

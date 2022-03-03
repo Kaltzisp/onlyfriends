@@ -33,31 +33,10 @@ io.on("connection", (socket) => {
         const videoPath = videos[fileName];
         socket.emit("getVideo", videoPath);
     });
-});
-
-/*
-// Socket.io events.
-io.on("connection", (socket) => {
-    console.log()
-    socket.emit("videoList", videos);
-    socket.on("selectVideo", (index) => {
-        const data = getMedia(index);
-        if (data) {
-            socket.emit("readyVideo", data);
-        } else {
-            socket.emit("errorMessage", "Media is corrupted.");
-        }
-    });
 
     socket.on("torrent", (data) => {
-        const magnet = data[0];
-        const index = data[1];
-        client.add(magnet, { path: `./media/${index}/` }, (torrent) => {
-            try {
-                fs.rmSync(`./media/${index}/${videos[index]}/`, { recursive: true });
-            } catch (err) {
-                console.log(err);
-            }
+        const magnet = data;
+        client.add(magnet, { path: `./media/` }, (torrent) => {
             const info = setInterval(() => {
                 const torrentInfo = {
                     name: torrent.name,
@@ -69,7 +48,6 @@ io.on("connection", (socket) => {
                 io.emit("torrentInfo", torrentInfo);
             }, 1000);
             torrent.on("done", () => {
-                videos[index] = torrent.name;
                 io.emit("videoList", videos);
                 torrent.destroy();
                 clearInterval(info);
@@ -91,5 +69,5 @@ io.on("connection", (socket) => {
     socket.on("syncAll", (time) => {
         io.emit("sync", time);
     });
+
 });
-*/
