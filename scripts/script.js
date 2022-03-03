@@ -13,9 +13,12 @@ socket.on("videoList", (videos) => {
 socket.on("getVideo", (path) => {
     player.attr("src", path);
     player.attr("type", `video/${path.substring(path.length - 3)}`);
-    // const track = video.addTextTrack("subtitles", "English", "en");
-    // track.mode = "showing";
-    // parseSubs(subs).map((cue) => track.addCue(cue));
+});
+
+socket.on("subs", (subs) => {
+    const track = video.addTextTrack("subtitles", "English", "en");
+    track.mode = "showing";
+    parseSubs(subs).map((cue) => track.addCue(cue));
 });
 
 socket.on("torrentInfo", (torrentInfo) => {
@@ -52,6 +55,10 @@ $(() => {
     video = player[0];
 
     $("#videoSelector").change(() => {
+        if ($("#videoSelector")[0].value.match(/.*.srt/)) {
+            socket.emit("selectSubs", $("#videoSelector")[0].value);
+            return;
+        }
         socket.emit("selectVideo", $("#videoSelector")[0].value);
     });
 
@@ -75,10 +82,6 @@ $(() => {
 
 });
 
-/*
-// Declaring global variables.
-let player;
-let video;
 
 // Subtitle parser functions.
 function parseTime(s) {
@@ -115,18 +118,3 @@ function parseSubs(srt) {
     }
     return cues;
 }
-
-socket.on("readyVideo", (data) => {
-    const path = data[0];
-    const subs = data[1];
-    player.attr("src", path);
-    player.attr("type", `video/${path.substring(path.length - 3)}`);
-    const track = video.addTextTrack("subtitles", "English", "en");
-    track.mode = "showing";
-    parseSubs(subs).map((cue) => track.addCue(cue));
-});
-
-// DOM load jQuery.
-$(() => {
-});
-*/

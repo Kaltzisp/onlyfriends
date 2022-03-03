@@ -34,6 +34,12 @@ io.on("connection", (socket) => {
         socket.emit("getVideo", videoPath);
     });
 
+    socket.on("selectSubs", (fileName) => {
+        const subs = fs.readFileSync(`./media/${fileName}`, "utf-8");
+        console.log(subs);
+        socket.emit("subs", subs);
+    });
+
     socket.on("torrent", (data) => {
         const magnet = data;
         client.add(magnet, { path: `./media/` }, (torrent) => {
