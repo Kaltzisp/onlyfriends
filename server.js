@@ -17,16 +17,17 @@ http.listen(port, () => {
 // Requiring modules.
 const WebTorrent = require("webtorrent");
 const fs = require("fs");
-const getFiles = require("./scripts/getFiles");
+const getFiles = require("./libs/getFiles");
 
 // Setting up torrent client.
 const client = new WebTorrent();
 
 // Getting video paths.
-const videos = getFiles("./media");
+let videos = getFiles("./media");
 
 // Socket.io events.
 io.on("connection", (socket) => {
+    videos = getFiles("./media");
     socket.emit("videoList", videos);
 
     socket.on("selectVideo", (fileName) => {
@@ -36,13 +37,12 @@ io.on("connection", (socket) => {
 
     socket.on("selectSubs", (fileName) => {
         const subs = fs.readFileSync(`./media/${fileName}`, "utf-8");
-        console.log(subs);
         socket.emit("subs", subs);
     });
 
     socket.on("torrent", (data) => {
         const magnet = data;
-        client.add(magnet, { path: `./media/` }, (torrent) => {
+        client.add(magnet, { path: "./media/" }, (torrent) => {
             const info = setInterval(() => {
                 const torrentInfo = {
                     name: torrent.name,
@@ -75,5 +75,4 @@ io.on("connection", (socket) => {
     socket.on("syncAll", (time) => {
         io.emit("sync", time);
     });
-
 });
