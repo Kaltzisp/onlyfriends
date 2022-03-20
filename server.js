@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("selectSubs", (fileName) => {
-        const subs = fs.readFileSync(`./media/${fileName}`, "utf-8");
+        const subs = fs.readFileSync(videos[fileName], "utf-8");
         socket.emit("subs", subs);
     });
 
