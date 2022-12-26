@@ -11,8 +11,8 @@ const app = express();
 const fs = require("fs");
 
 const options = test ? {} : {
-    key: fs.readFileSync("/etc/letsencrypt/live/daal.me-0001/privkey.pem"),
-    cert: fs.readFileSync("/etc/letsencrypt/live/daal.me-0001/fullchain.pem")
+    key: fs.readFileSync("/etc/letsencrypt/live/daal.me/privkey.pem"),
+    cert: fs.readFileSync("/etc/letsencrypt/live/daal.me/fullchain.pem")
 };
 
 const httpForm = test ? "http" : "https";
