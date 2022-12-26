@@ -66,6 +66,13 @@ $(() => {
         }
     });
 
+    $("#magnetLink").on("keydown", (e) => {
+        if (e.key === "Enter") {
+            socket.emit("sendMsg", $("#magnetLink")[0].value);
+            $("#magnetLink")[0].value = "";
+        }
+    });
+
     $("#torrent").click(() => {
         $("#torrent").prop("disabled", true);
         $("#torrent").css("background-color", "grey");
