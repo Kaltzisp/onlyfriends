@@ -6,7 +6,7 @@
     "main": "index.js",
     "author": "Linke",
     "engines": {
-        "node": "17.x.x"
+        "node": "18.x.x"
     },
     "devDependencies": {
         "eslint": "latest",
