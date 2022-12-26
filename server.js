@@ -1,8 +1,22 @@
-const port = process.env.PORT || 8000;
+// Determining environment.
+let test = true;
+if (process.env.OS !== "Windows_NT") {
+    test = false;
+}
+
+const port = 443;
 const express = require("express");
 
 const app = express();
-const http = require("http").Server(app);
+const fs = require("fs");
+
+const options = test ? {} : {
+    key: fs.readFileSync("/etc/letsencrypt/live/daal.me/privkey.pem"),
+    cert: fs.readFileSync("/etc/letsencrypt/live/daal.me/fullchain.pem")
+};
+
+const httpForm = test ? "http" : "https";
+const http = require(httpForm).Server(options, app);
 const io = require("socket.io")(http);
 
 // Initialising server.
@@ -16,7 +30,6 @@ http.listen(port, () => {
 
 // Requiring modules.
 const WebTorrent = require("webtorrent");
-const fs = require("fs");
 const getFiles = require("./libs/getFiles");
 
 // Setting up torrent client.
