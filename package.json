@@ -1,6 +1,6 @@
 {
     "name": "jmov",
-    "version": "1.0",
+    "version": "1.0.1",
     "license": "ISC",
     "description": "Real time video viewer built in JS.",
     "main": "index.js",
