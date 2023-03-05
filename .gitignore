@@ -1,4 +1,12 @@
-package-lock.json
-media/
-node_modules/
+# Editor
 .vscode
+
+# Env
+.env
+
+# Node
+node_modules
+
+# Build
+app
+media
